@@ -1,24 +1,237 @@
 import { createFileRoute } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  BookOpen,
+  BriefcaseBusiness,
+  ChevronRight,
+  Clock3,
+  Facebook,
+  Globe2,
+  GraduationCap,
+  HeartHandshake,
+  Instagram,
+  Menu,
+  MessageCircle,
+  Play,
+  Quote,
+  Smartphone,
+  Sparkles,
+  Star,
+  WalletCards,
+  X,
+} from "lucide-react";
+import { useState } from "react";
 
-// No head() here: the home route inherits title/description/og/twitter from
-// __root.tsx, and ships no og:image so serve-time hosting can inject the
-// project's social preview (explicit og:image or latest screenshot).
+import { Button } from "@/components/ui/button";
+import heroImage from "@/assets/iftiin-hero.jpg";
+import technologyImage from "@/assets/track-technology.jpg";
+import languageImage from "@/assets/track-language.jpg";
+import truckingImage from "@/assets/track-trucking.jpg";
+import careerImage from "@/assets/track-career.jpg";
+import lifeImage from "@/assets/track-life.jpg";
+import businessImage from "@/assets/track-business.jpg";
+import aminaImage from "@/assets/testimonial-amina.jpg";
+import yusufImage from "@/assets/testimonial-yusuf.jpg";
+import hodanImage from "@/assets/testimonial-hodan.jpg";
+
+const WHATSAPP_URL = "https://wa.me/000000000000";
+const SKOOL_URL = "https://www.skool.com/your-community";
+
+type Course = { title: string; description: string; badge: string; image: string };
+type Track = { name: string; short: string; intro: string; courses: Course[]; flagship?: boolean };
+
+const tracks: Track[] = [
+  {
+    name: "Language & Culture",
+    short: "Language",
+    flagship: true,
+    intro: "Keep language, faith, and belonging strong across generations.",
+    courses: [
+      { title: "Somali Language for Diaspora Kids", description: "Help your child speak with grandparents, understand their roots, and feel proud of who they are.", badge: "Flagship", image: languageImage },
+      { title: "English Language", description: "Build confident conversational and academic English for school, work, and everyday life.", badge: "Popular", image: careerImage },
+      { title: "Quran, Arabic & Islamic Studies", description: "A calm, supportive path to reading, understanding, and growing in faith from home.", badge: "Flagship", image: languageImage },
+    ],
+  },
+  {
+    name: "Trucking & Logistics",
+    short: "Trucking",
+    flagship: true,
+    intro: "Practical preparation for one of the diaspora’s most proven career paths.",
+    courses: [
+      { title: "CDL Permit Test Prep", description: "Study the rules, signs, and safety knowledge you need to walk into your permit test prepared.", badge: "Flagship", image: truckingImage },
+      { title: "Dispatch Fundamentals", description: "Learn the real workflow behind loads, brokers, routes, and driver communication.", badge: "Popular", image: truckingImage },
+      { title: "Owner-Operator Basics", description: "Understand costs, compliance, loads, and cash flow before putting your own truck on the road.", badge: "New", image: truckingImage },
+    ],
+  },
+  {
+    name: "Technology & Digital Skills",
+    short: "Technology",
+    intro: "Build digital confidence that opens doors at school, work, and in business.",
+    courses: [
+      { title: "Microsoft Office Essentials", description: "Create polished documents, useful spreadsheets, and confident presentations for work or school.", badge: "Popular", image: technologyImage },
+      { title: "AI Tools for Beginners", description: "Use everyday AI to learn faster, write better, organize life, and turn ideas into action.", badge: "New", image: technologyImage },
+      { title: "Mathematics", description: "Clear, patient, exam-focused support that makes difficult topics finally click.", badge: "Popular", image: lifeImage },
+      { title: "Basic Coding / Web Design", description: "Build your first web pages and discover how digital products come to life.", badge: "New", image: technologyImage },
+      { title: "Social Media & Digital Marketing", description: "Plan content, grow an audience, and promote a small business with purpose.", badge: "Popular", image: technologyImage },
+    ],
+  },
+  {
+    name: "Immigration & Life-Abroad Prep",
+    short: "Life Abroad",
+    intro: "Walk into important tests and new chapters feeling prepared, not overwhelmed.",
+    courses: [
+      { title: "US Citizenship Test Prep", description: "Learn the civics, vocabulary, and interview confidence you need for naturalization day.", badge: "Popular", image: careerImage },
+      { title: "Life in the UK Test Prep", description: "Focused practice and plain-English guidance for a major step toward settling in the UK.", badge: "Popular", image: careerImage },
+      { title: "Driving Theory Test Prep", description: "Master road rules and hazard awareness with US, UK, and Kenya-focused variants.", badge: "New", image: truckingImage },
+      { title: "IELTS / TOEFL Prep", description: "Strengthen speaking, listening, reading, and writing for your next study or career move.", badge: "Popular", image: careerImage },
+    ],
+  },
+  {
+    name: "Career & Business Skills",
+    short: "Career",
+    intro: "Turn your experience and ambition into stronger applications and healthier businesses.",
+    courses: [
+      { title: "CV Writing & Job Interview Skills", description: "Tell your story clearly, present your strengths, and enter interviews ready to shine.", badge: "Popular", image: careerImage },
+      { title: "Small Business & Bookkeeping", description: "Use simple Excel systems to understand sales, expenses, and the true health of your business.", badge: "New", image: businessImage },
+    ],
+  },
+  {
+    name: "School Support for Diaspora Kids",
+    short: "School",
+    intro: "Patient, culturally aware support that helps young learners catch up and aim higher.",
+    courses: [
+      { title: "Science", description: "Make key exam topics memorable through clear explanations and practical examples.", badge: "Popular", image: lifeImage },
+      { title: "English as a School Subject", description: "Grow stronger in reading, analysis, writing, and the confidence to speak up in class.", badge: "New", image: languageImage },
+    ],
+  },
+  {
+    name: "Family Life",
+    short: "Family",
+    intro: "Practical tools for raising grounded, confident children between cultures.",
+    courses: [
+      { title: "Parenting in the Diaspora", description: "Navigate identity, school, communication, and family expectations with empathy and practical tools.", badge: "New", image: lifeImage },
+    ],
+  },
+  {
+    name: "High-Demand Additions",
+    short: "Top Picks",
+    intro: "Forward-looking skills for the opportunities diaspora learners ask about most.",
+    courses: [
+      { title: "Nursing / CNA / Healthcare Prep", description: "Build the knowledge, vocabulary, and test confidence to begin a caring healthcare career.", badge: "Top Pick", image: lifeImage },
+      { title: "Import-Export & Trade Skills", description: "Understand suppliers, shipping, customs, and how to connect markets across borders.", badge: "New", image: businessImage },
+      { title: "Real Estate Investment", description: "Learn how to evaluate property, risk, financing, and long-term opportunities from wherever you live.", badge: "New", image: businessImage },
+      { title: "Halal Finance & Investing", description: "Build wealth thoughtfully through practical, faith-conscious financial principles.", badge: "Popular", image: businessImage },
+      { title: "Visa & Scholarship Guidance", description: "Find opportunities, strengthen applications, and plan your study-abroad journey with clarity.", badge: "Top Pick", image: careerImage },
+    ],
+  },
+];
+
+const benefits = [
+  { icon: HeartHandshake, title: "Taught by our own", text: "Somali educators who know the culture, the language, and the journey." },
+  { icon: BriefcaseBusiness, title: "Real careers, real skills", text: "From trucking to nursing prep, learn skills that lead somewhere." },
+  { icon: WalletCards, title: "Pay your way", text: "Card and PayPal abroad; EVC Plus, Zaad, and M-Pesa back home." },
+  { icon: Clock3, title: "Learn on your schedule", text: "Join live classes or download lessons when bandwidth is limited." },
+];
+
 export const Route = createFileRoute("/")({
+  head: () => ({
+    meta: [
+      { title: "Iftiin Academy | Learn, Grow & Get Ahead" },
+      { name: "description", content: "Practical language, career, faith, and life-skills courses created for the Somali diaspora worldwide." },
+      { property: "og:title", content: "Iftiin Academy — Learning for the Somali Diaspora" },
+      { property: "og:description", content: "Learn practical skills from educators who understand your journey." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+  }),
   component: Index,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
+function Logo({ inverted = false }: { inverted?: boolean }) {
+  return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span><span className={`font-display text-lg font-extrabold ${inverted ? "text-primary-foreground" : "text-primary"}`}>Iftiin<span className="text-gold">.</span></span></a>;
+}
+
 function Index() {
+  const [activeTrack, setActiveTrack] = useState(0);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const track = tracks[activeTrack] ?? tracks[0];
+  if (!track) return null;
+
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <main className="overflow-hidden">
+      <header className="fixed inset-x-0 top-0 z-50 border-b border-border/70 bg-background/90 backdrop-blur-xl">
+        <div className="section-shell grid h-17 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 lg:flex lg:justify-between">
+          <Logo />
+          <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
+            {[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Stories", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">{label}</a>)}
+          </nav>
+          <div className="hidden lg:block"><Button asChild variant="gold"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-4" />Enroll now</a></Button></div>
+          <Button aria-label={menuOpen ? "Close menu" : "Open menu"} variant="ghost" size="icon" className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
+        </div>
+        {menuOpen && <nav aria-label="Mobile navigation" className="border-t border-border bg-background px-4 py-4 lg:hidden">{[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block border-b border-border py-3 font-bold text-foreground last:border-0">{label}</a>)}</nav>}
+      </header>
+
+      <section id="home" className="relative min-h-[92svh] scroll-mt-20 bg-primary pt-17 text-primary-foreground">
+        <img src={heroImage} width={1536} height={1024} fetchPriority="high" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--primary)_0%,color-mix(in_oklab,var(--primary)_94%,transparent)_38%,color-mix(in_oklab,var(--primary)_35%,transparent)_72%,color-mix(in_oklab,var(--primary)_15%,transparent)_100%)]" />
+        <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
+          <div className="max-w-3xl reveal-up">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />Knowledge without borders</div>
+            <h1 className="text-balance font-display text-4xl font-extrabold leading-[1.06] sm:text-6xl lg:text-7xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
+            <p className="mt-6 max-w-2xl text-balance text-base leading-7 text-primary-foreground/85 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Button asChild variant="gold" size="lg"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
+              <Button asChild size="lg" className="border border-primary-foreground/35 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
+
+      <section className="py-20 sm:py-28">
+        <div className="section-shell">
+          <div className="max-w-2xl"><span className="section-kicker"><Star className="size-4" />Why Iftiin</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl">Built around how our community actually learns.</h2></div>
+          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-surface p-6 transition-colors hover:bg-gold-soft"><span className="mb-8 grid size-11 place-items-center rounded-md bg-primary text-primary-foreground"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold-foreground">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
+        </div>
+      </section>
+
+      <section id="courses" className="scroll-mt-16 bg-surface-strong py-20 sm:py-28">
+        <div className="section-shell">
+          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><span className="section-kicker"><BookOpen className="size-4" />Course catalog</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Skills for the life you’re building.</h2><p className="mt-4 max-w-2xl leading-7 text-muted-foreground">Start with what matters now. Every course is practical, welcoming, and built to move you forward.</p></div><div className="flex items-center gap-2 text-sm font-bold text-primary"><Play className="size-4 fill-current" />Live + downloadable lessons</div></div>
+          <div className="mt-10 flex gap-2 overflow-x-auto pb-3" role="tablist" aria-label="Course tracks">{tracks.map((item, index) => <button key={item.name} type="button" role="tab" aria-selected={index === activeTrack} onClick={() => setActiveTrack(index)} className={`shrink-0 rounded-md border px-4 py-2.5 text-sm font-bold transition-colors ${index === activeTrack ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground hover:border-primary hover:text-primary"}`}>{item.short}{item.flagship && <span className="ml-2 text-gold">★</span>}</button>)}</div>
+          <div className="mt-7 flex flex-col gap-2 border-l-4 border-gold pl-4"><p className="text-xs font-extrabold uppercase tracking-[0.14em] text-primary">{track.flagship ? "Flagship track" : `Track ${activeTrack + 1}`}</p><h3 className="text-2xl font-extrabold sm:text-3xl">{track.name}</h3><p className="text-sm text-muted-foreground">{track.intro}</p></div>
+          <div className={`mt-8 grid gap-5 ${track.courses.length === 1 ? "max-w-md" : "sm:grid-cols-2 lg:grid-cols-3"}`}>{track.courses.map((course) => <article key={course.title} className="group overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong"><div className="relative aspect-[4/3] overflow-hidden"><img src={course.image} width={1024} height={768} loading="lazy" alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /><span className="absolute left-4 top-4 rounded-sm bg-gold px-2.5 py-1 text-[11px] font-extrabold uppercase text-gold-foreground">{course.badge}</span></div><div className="p-5"><h3 className="text-lg font-extrabold leading-snug">{course.title}</h3><p className="mt-2 min-h-18 text-sm leading-6 text-muted-foreground">{course.description}</p><a href={SKOOL_URL} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-sm font-extrabold text-primary">Explore course <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" /></a></div></article>)}</div>
+        </div>
+      </section>
+
+      <section id="how-it-works" className="pattern-grid scroll-mt-16 py-20 sm:py-28">
+        <div className="section-shell"><div className="mx-auto max-w-2xl text-center"><span className="section-kicker"><GraduationCap className="size-4" />How it works</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Three simple steps. One brighter next chapter.</h2></div>
+          <div className="relative mt-14 grid gap-5 lg:grid-cols-3">{[
+            { number: "1", title: "Pick your course", text: "Choose the skill, test, or subject that moves your goals forward.", icon: BookOpen },
+            { number: "2", title: "Pay your way", text: "Use card or PayPal in the US, or EVC Plus, Zaad, and M-Pesa in Somalia and Kenya.", icon: WalletCards },
+            { number: "3", title: "Start learning", text: "Get enrolled, meet your instructor, and begin with live or downloadable lessons.", icon: Play },
+          ].map(({ number, title, text, icon: StepIcon }) => <article key={number} className="relative rounded-lg border border-border bg-surface p-7 shadow-card"><span className="absolute right-6 top-4 font-display text-6xl font-extrabold text-muted">{number}</span><span className="grid size-12 place-items-center rounded-md bg-primary text-gold"><StepIcon className="size-5" /></span><h3 className="mt-8 text-xl font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
+          <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/75">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
+        </div>
+      </section>
+
+      <section id="testimonials" className="scroll-mt-16 bg-primary py-20 text-primary-foreground sm:py-28">
+        <div className="section-shell"><div className="max-w-2xl"><span className="section-kicker !text-gold"><Quote className="size-4" />Learner stories</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Progress feels better when it feels possible.</h2></div>
+          {/* Placeholder testimonials — replace with verified learner testimonials before launch. */}
+          <div className="mt-12 grid gap-5 md:grid-cols-3">{[
+            [aminaImage, "Amina", "Minneapolis", "I finally found lessons I could share with my children without having to explain our whole family story first."],
+            [yusufImage, "Yusuf", "Nairobi", "The steps were practical and clear. I could study after work and use what I learned straight away."],
+            [hodanImage, "Hodan", "London", "It felt warm, ambitious, and made for us. That gave me the confidence to keep going."],
+          ].map(([image, name, location, quote]) => <figure key={name} className="rounded-lg border border-primary-foreground/15 bg-primary-foreground/5 p-6"><Quote className="size-7 text-gold" /><blockquote className="mt-5 min-h-28 text-base leading-7 text-primary-foreground/85">“{quote}”</blockquote><figcaption className="mt-6 flex items-center gap-3"><img src={image} width={816} height={816} loading="lazy" alt={`Illustrated placeholder avatar for ${name}`} className="size-11 rounded-full object-cover" /><span><strong className="block text-sm">{name}</strong><span className="text-xs text-primary-foreground/60">{location}</span></span></figcaption></figure>)}</div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24"><div className="section-shell"><div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><span className="section-kicker">Our team</span><h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">One mission. Many kinds of expertise.</h2></div><p className="max-w-xl leading-7 text-muted-foreground">A founding team focused on building trusted learning experiences for Somali families around the world.</p></div><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[["PT", "Product & Tech Lead"], ["OL", "Operations Lead"], ["CL", "Curriculum Lead"], ["ML", "Marketing Lead"]].map(([initials, role]) => <div key={role} className="flex items-center gap-4 rounded-lg border border-border bg-surface p-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft font-display text-sm font-extrabold text-gold-foreground">{initials}</span><span className="text-sm font-extrabold">{role}</span></div>)}</div></div></section>
+
+      <section id="contact" className="scroll-mt-16 bg-gold-soft py-16 sm:py-20"><div className="section-shell grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-primary">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-muted-foreground">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-col gap-3 sm:flex-row"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer">Visit our school <ArrowRight className="size-4" /></a></Button></div></div></section>
+
+      <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo inverted /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/65">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/70"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/55 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Iftiin Academy. All rights reserved.</span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
+    </main>
   );
 }
