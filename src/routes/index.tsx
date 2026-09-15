@@ -20,7 +20,8 @@ import {
   WalletCards,
   X,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
+import { QRCodeSVG } from "qrcode.react";
 
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/iftiin-hero.jpg";
@@ -33,6 +34,9 @@ import businessImage from "@/assets/track-business.jpg";
 import aminaImage from "@/assets/testimonial-amina.jpg";
 import yusufImage from "@/assets/testimonial-yusuf.jpg";
 import hodanImage from "@/assets/testimonial-hodan.jpg";
+import globalLearnersImage from "@/assets/global-online-learners.jpg";
+import studyCommunityImage from "@/assets/online-study-community.jpg";
+import { initializeAnalytics, trackOutbound } from "@/lib/analytics";
 
 const WHATSAPP_URL = "https://wa.me/000000000000";
 const SKOOL_URL = "https://www.skool.com/your-community";
@@ -136,13 +140,22 @@ const benefits = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Iftiin Academy | Learn, Grow & Get Ahead" },
-      { name: "description", content: "Practical language, career, faith, and life-skills courses created for the Somali diaspora worldwide." },
-      { property: "og:title", content: "Iftiin Academy — Learning for the Somali Diaspora" },
-      { property: "og:description", content: "Learn practical skills from educators who understand your journey." },
+      { title: "Iftiin Academy | Online Learning for Somalis" },
+      { name: "description", content: "Online language, career, faith, and life-skills courses for Somali learners in the UK, USA, Somalia, and worldwide." },
+      { property: "og:title", content: "Iftiin Academy — Learn, Grow & Get Ahead" },
+      { property: "og:description", content: "Practical online courses created for the Somali diaspora, wherever you live." },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://iftiin-light-of-knowledge.lovable.app/" },
+      { property: "og:image", content: "https://iftiin-light-of-knowledge.lovable.app/og-iftiin-academy.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "Somali diaspora learners studying online with Iftiin Academy" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Iftiin Academy — Learn, Grow & Get Ahead" },
+      { name: "twitter:description", content: "Practical online courses created for the Somali diaspora, wherever you live." },
+      { name: "twitter:image", content: "https://iftiin-light-of-knowledge.lovable.app/og-iftiin-academy.jpg" },
     ],
+    links: [{ rel: "canonical", href: "https://iftiin-light-of-knowledge.lovable.app/" }],
   }),
   component: Index,
 });
@@ -154,8 +167,21 @@ function Logo({ inverted = false }: { inverted?: boolean }) {
 function Index() {
   const [activeTrack, setActiveTrack] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
+  const techPanelRef = useRef<HTMLDivElement>(null);
   const track = tracks[activeTrack] ?? tracks[0];
+  useEffect(() => initializeAnalytics(), []);
   if (!track) return null;
+
+  const handleTechMove = (event: MouseEvent<HTMLDivElement>) => {
+    const panel = techPanelRef.current;
+    if (!panel) return;
+    const bounds = panel.getBoundingClientRect();
+    panel.style.setProperty("--cursor-x", `${event.clientX - bounds.left}px`);
+    panel.style.setProperty("--cursor-y", `${event.clientY - bounds.top}px`);
+  };
+
+  const trackWhatsApp = (label: string) => trackOutbound({ action: "whatsapp_enroll_click", destination: "whatsapp", label });
+  const trackSkool = (label: string, course?: string) => trackOutbound({ action: course ? "course_card_click" : "skool_enroll_click", destination: "skool", label, course, track: course ? track.name : undefined });
 
   return (
     <main className="overflow-hidden">
@@ -165,7 +191,7 @@ function Index() {
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
             {[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Stories", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">{label}</a>)}
           </nav>
-          <div className="hidden lg:block"><Button asChild variant="gold"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-4" />Enroll now</a></Button></div>
+          <div className="hidden lg:block"><Button asChild variant="gold"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Header enroll now")}><MessageCircle className="size-4" />Enroll now</a></Button></div>
           <Button aria-label={menuOpen ? "Close menu" : "Open menu"} variant="ghost" size="icon" className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
         </div>
         {menuOpen && <nav aria-label="Mobile navigation" className="border-t border-border bg-background px-4 py-4 lg:hidden">{[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block border-b border-border py-3 font-bold text-foreground last:border-0">{label}</a>)}</nav>}
@@ -181,7 +207,7 @@ function Index() {
             <p className="mt-6 max-w-2xl text-balance text-base leading-7 text-primary-foreground/85 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild variant="gold" size="lg"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
-              <Button asChild size="lg" className="border border-primary-foreground/35 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+              <Button asChild size="lg" className="border border-primary-foreground/35 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
             </div>
           </div>
         </div>
@@ -190,18 +216,25 @@ function Index() {
       <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
 
       <section className="py-20 sm:py-28">
+        <div className="section-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div><span className="section-kicker"><Globe2 className="size-4" />One academy, worldwide</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Your classroom travels with you.</h2><p className="mt-5 max-w-xl leading-7 text-muted-foreground">Join online from London, Minneapolis, Mogadishu, Nairobi, or wherever opportunity takes you. Learn on a laptop, tablet, or phone without leaving your community behind.</p><div className="mt-7 flex flex-wrap gap-2 text-xs font-extrabold text-primary"><span className="rounded-sm bg-surface-strong px-3 py-2">UK learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">USA learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Somalia learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Worldwide diaspora</span></div></div>
+          <div ref={techPanelRef} onMouseMove={handleTechMove} className="tech-panel group relative overflow-hidden rounded-lg border border-border bg-primary shadow-card"><img src={globalLearnersImage} width={1536} height={1024} loading="lazy" alt="Somali online learners using a laptop, tablet, and phone in the UK, USA, and Somalia" className="aspect-[3/2] size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" /><div className="tech-grid" aria-hidden="true" /><div className="tech-cursor" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-md border border-primary-foreground/20 bg-primary/85 px-4 py-3 text-primary-foreground backdrop-blur"><span className="text-xs font-extrabold uppercase tracking-[0.14em]">Live online · Learn anywhere</span><span className="size-2 rounded-full bg-gold shadow-[0_0_18px_var(--gold)]" /></div></div>
+        </div>
+      </section>
+
+      <section className="bg-surface-strong py-20 sm:py-28">
         <div className="section-shell">
           <div className="max-w-2xl"><span className="section-kicker"><Star className="size-4" />Why Iftiin</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl">Built around how our community actually learns.</h2></div>
           <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-surface p-6 transition-colors hover:bg-gold-soft"><span className="mb-8 grid size-11 place-items-center rounded-md bg-primary text-primary-foreground"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold-foreground">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
         </div>
       </section>
 
-      <section id="courses" className="scroll-mt-16 bg-surface-strong py-20 sm:py-28">
+      <section id="courses" className="scroll-mt-16 py-20 sm:py-28">
         <div className="section-shell">
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><span className="section-kicker"><BookOpen className="size-4" />Course catalog</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Skills for the life you’re building.</h2><p className="mt-4 max-w-2xl leading-7 text-muted-foreground">Start with what matters now. Every course is practical, welcoming, and built to move you forward.</p></div><div className="flex items-center gap-2 text-sm font-bold text-primary"><Play className="size-4 fill-current" />Live + downloadable lessons</div></div>
           <div className="mt-10 flex gap-2 overflow-x-auto pb-3" role="tablist" aria-label="Course tracks">{tracks.map((item, index) => <button key={item.name} type="button" role="tab" aria-selected={index === activeTrack} onClick={() => setActiveTrack(index)} className={`shrink-0 rounded-md border px-4 py-2.5 text-sm font-bold transition-colors ${index === activeTrack ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground hover:border-primary hover:text-primary"}`}>{item.short}{item.flagship && <span className="ml-2 text-gold">★</span>}</button>)}</div>
           <div className="mt-7 flex flex-col gap-2 border-l-4 border-gold pl-4"><p className="text-xs font-extrabold uppercase tracking-[0.14em] text-primary">{track.flagship ? "Flagship track" : `Track ${activeTrack + 1}`}</p><h3 className="text-2xl font-extrabold sm:text-3xl">{track.name}</h3><p className="text-sm text-muted-foreground">{track.intro}</p></div>
-          <div className={`mt-8 grid gap-5 ${track.courses.length === 1 ? "max-w-md" : "sm:grid-cols-2 lg:grid-cols-3"}`}>{track.courses.map((course) => <article key={course.title} className="group overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong"><div className="relative aspect-[4/3] overflow-hidden"><img src={course.image} width={1024} height={768} loading="lazy" alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /><span className="absolute left-4 top-4 rounded-sm bg-gold px-2.5 py-1 text-[11px] font-extrabold uppercase text-gold-foreground">{course.badge}</span></div><div className="p-5"><h3 className="text-lg font-extrabold leading-snug">{course.title}</h3><p className="mt-2 min-h-18 text-sm leading-6 text-muted-foreground">{course.description}</p><a href={SKOOL_URL} target="_blank" rel="noreferrer" className="mt-5 inline-flex items-center gap-1 text-sm font-extrabold text-primary">Explore course <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" /></a></div></article>)}</div>
+          <div className={`mt-8 grid gap-5 ${track.courses.length === 1 ? "max-w-md" : "sm:grid-cols-2 lg:grid-cols-3"}`}>{track.courses.map((course) => <article key={course.title} className="group overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong"><div className="relative aspect-[4/3] overflow-hidden"><img src={course.image} width={1024} height={768} loading="lazy" alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /><span className="absolute left-4 top-4 rounded-sm bg-gold px-2.5 py-1 text-[11px] font-extrabold uppercase text-gold-foreground">{course.badge}</span></div><div className="p-5"><h3 className="text-lg font-extrabold leading-snug">{course.title}</h3><p className="mt-2 min-h-18 text-sm leading-6 text-muted-foreground">{course.description}</p><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Explore course", course.title)} className="mt-5 inline-flex items-center gap-1 text-sm font-extrabold text-primary">Explore course <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" /></a></div></article>)}</div>
         </div>
       </section>
 
@@ -212,7 +245,25 @@ function Index() {
             { number: "2", title: "Pay your way", text: "Use card or PayPal in the US, or EVC Plus, Zaad, and M-Pesa in Somalia and Kenya.", icon: WalletCards },
             { number: "3", title: "Start learning", text: "Get enrolled, meet your instructor, and begin with live or downloadable lessons.", icon: Play },
           ].map(({ number, title, text, icon: StepIcon }) => <article key={number} className="relative rounded-lg border border-border bg-surface p-7 shadow-card"><span className="absolute right-6 top-4 font-display text-6xl font-extrabold text-muted">{number}</span><span className="grid size-12 place-items-center rounded-md bg-primary text-gold"><StepIcon className="size-5" /></span><h3 className="mt-8 text-xl font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
-          <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/75">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
+           <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/75">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Send payment receipt")}><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
+        </div>
+      </section>
+
+      <section id="faq" className="bg-surface-strong py-20 sm:py-28">
+        <div className="section-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div><span className="section-kicker">Enrollment FAQ</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Clear answers before you begin.</h2><p className="mt-5 max-w-lg leading-7 text-muted-foreground">Not sure where to start? Message our team and we’ll help you choose without pressure.</p><img src={studyCommunityImage} width={1536} height={1024} loading="lazy" alt="Somali students joining an online study community from home" className="mt-8 aspect-[3/2] w-full rounded-lg object-cover shadow-card" /></div>
+          <div className="divide-y divide-border border-y border-border">{[
+            ["How does enrollment work?", "Choose a course, select the payment option that works in your country, and complete payment. We’ll confirm your place and send the details you need to begin live or downloadable lessons."],
+            ["How does pay-your-way confirmation on WhatsApp work?", "If you pay with EVC Plus, Zaad, or M-Pesa, open WhatsApp after payment and send a clear receipt or transaction screenshot with your name and chosen course. Our team will verify it and enroll you within hours."],
+            ["Which course track should I choose?", "Start with your immediate goal: Language & Culture for identity and faith, Trucking or Career Skills for work, Technology for digital confidence, School Support for young learners, or Life-Abroad Prep for tests and relocation. If two tracks fit, ask us on WhatsApp."],
+          ].map(([question, answer]) => <details key={question} className="group py-5" open={question === "How does enrollment work?"}><summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-lg font-extrabold"><span>{question}</span><span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pt-4 text-sm leading-7 text-muted-foreground">{answer}</p></details>)}</div>
+        </div>
+      </section>
+
+      <section className="py-20 sm:py-24">
+        <div className="section-shell grid overflow-hidden rounded-lg bg-primary text-primary-foreground lg:grid-cols-[1fr_auto]">
+          <div className="p-7 sm:p-10"><span className="section-kicker !text-gold">Scan to enroll</span><h2 className="mt-4 max-w-xl text-balance text-3xl font-extrabold sm:text-5xl">Open WhatsApp. Start your next chapter.</h2><p className="mt-4 max-w-xl leading-7 text-primary-foreground/75">Scan with your phone camera to ask about a course, confirm payment, or get help choosing the right track.</p><Button asChild variant="whatsapp" size="lg" className="mt-7"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("QR section enroll")}><MessageCircle className="size-5" />Open WhatsApp</a></Button></div>
+          <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("WhatsApp QR code")} aria-label="Open WhatsApp enrollment" className="m-7 grid place-items-center rounded-lg bg-surface p-5 sm:m-10"><QRCodeSVG value={WHATSAPP_URL} size={210} level="H" bgColor="transparent" fgColor="var(--primary)" title="WhatsApp enrollment QR code" /><span className="mt-3 text-xs font-extrabold text-primary">SCAN TO ENROLL</span></a>
         </div>
       </section>
 
@@ -229,7 +280,7 @@ function Index() {
 
       <section className="py-20 sm:py-24"><div className="section-shell"><div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><span className="section-kicker">Our team</span><h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">One mission. Many kinds of expertise.</h2></div><p className="max-w-xl leading-7 text-muted-foreground">A founding team focused on building trusted learning experiences for Somali families around the world.</p></div><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[["PT", "Product & Tech Lead"], ["OL", "Operations Lead"], ["CL", "Curriculum Lead"], ["ML", "Marketing Lead"]].map(([initials, role]) => <div key={role} className="flex items-center gap-4 rounded-lg border border-border bg-surface p-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft font-display text-sm font-extrabold text-gold-foreground">{initials}</span><span className="text-sm font-extrabold">{role}</span></div>)}</div></div></section>
 
-      <section id="contact" className="scroll-mt-16 bg-gold-soft py-16 sm:py-20"><div className="section-shell grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-primary">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-muted-foreground">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-col gap-3 sm:flex-row"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer">Visit our school <ArrowRight className="size-4" /></a></Button></div></div></section>
+      <section id="contact" className="scroll-mt-16 bg-gold-soft py-16 sm:py-20"><div className="section-shell grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-primary">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-muted-foreground">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-col gap-3 sm:flex-row"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Contact WhatsApp")}><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Visit our school")}>Visit our school <ArrowRight className="size-4" /></a></Button></div></div></section>
 
       <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo inverted /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/65">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/70"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/55 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Iftiin Academy. All rights reserved.</span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
     </main>

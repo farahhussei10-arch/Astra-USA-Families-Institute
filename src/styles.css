@@ -115,6 +115,29 @@
 
 @utility reveal-up { animation: reveal-up 0.7s ease-out both; }
 
+.tech-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(color-mix(in oklab, var(--gold) 22%, transparent) 1px, transparent 1px),
+    linear-gradient(90deg, color-mix(in oklab, var(--gold) 22%, transparent) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at var(--cursor-x, 50%) var(--cursor-y, 50%), black, transparent 42%);
+  opacity: 0.7;
+}
+
+.tech-cursor {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle 150px at var(--cursor-x, 50%) var(--cursor-y, 50%), color-mix(in oklab, var(--gold) 24%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 250ms ease;
+}
+
+.tech-panel:hover .tech-cursor { opacity: 1; }
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after {
