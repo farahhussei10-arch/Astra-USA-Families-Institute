@@ -3,10 +3,8 @@ import {
   ArrowRight,
   BookOpen,
   BriefcaseBusiness,
-  Check,
   ChevronRight,
   Clock3,
-  Download,
   Facebook,
   Globe2,
   GraduationCap,
@@ -149,8 +147,8 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function Logo() {
-  return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className="grid size-9 place-items-center rounded-md bg-primary text-gold"><Sparkles className="size-5" /></span><span className="font-display text-lg font-extrabold text-primary">Iftiin<span className="text-gold">.</span></span></a>;
+function Logo({ inverted = false }: { inverted?: boolean }) {
+  return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span><span className={`font-display text-lg font-extrabold ${inverted ? "text-primary-foreground" : "text-primary"}`}>Iftiin<span className="text-gold">.</span></span></a>;
 }
 
 function Index() {
@@ -189,7 +187,7 @@ function Index() {
         </div>
       </section>
 
-      <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">🇺🇸 United States · 🇬🇧 United Kingdom · 🇰🇪 Kenya · 🇸🇴 Somalia</span></div></div>
+      <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
 
       <section className="py-20 sm:py-28">
         <div className="section-shell">
@@ -233,7 +231,7 @@ function Index() {
 
       <section id="contact" className="scroll-mt-16 bg-gold-soft py-16 sm:py-20"><div className="section-shell grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-primary">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-muted-foreground">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-col gap-3 sm:flex-row"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer"><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer">Visit our school <ArrowRight className="size-4" /></a></Button></div></div></section>
 
-      <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/65">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/70"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/55 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Iftiin Academy. All rights reserved.</span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
+      <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo inverted /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/65">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/70"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/55 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Iftiin Academy. All rights reserved.</span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
     </main>
   );
 }
