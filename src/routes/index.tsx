@@ -238,7 +238,7 @@ function Index() {
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
             {[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Stories", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">{label}</a>)}
           </nav>
-          <div className="hidden lg:block"><Button asChild variant="gold"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Header enroll now")}><MessageCircle className="size-4" />Enroll now</a></Button></div>
+          <div className="hidden lg:block"><Button asChild variant="whatsapp"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Header enroll now")}><MessageCircle className="size-4" />Enroll on WhatsApp</a></Button></div>
           <Button aria-label={menuOpen ? "Close menu" : "Open menu"} variant="ghost" size="icon" className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
         </div>
         {menuOpen && <nav aria-label="Mobile navigation" className="border-t border-border bg-background px-4 py-4 lg:hidden">{[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block border-b border-border py-3 font-bold text-foreground last:border-0">{label}</a>)}</nav>}
