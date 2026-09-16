@@ -181,7 +181,13 @@ function Index() {
   };
 
   const trackWhatsApp = (label: string) => trackOutbound({ action: "whatsapp_enroll_click", destination: "whatsapp", label });
-  const trackSkool = (label: string, course?: string) => trackOutbound({ action: course ? "course_card_click" : "skool_enroll_click", destination: "skool", label, course, track: course ? track.name : undefined });
+  const trackSkool = (label: string, course?: string) =>
+    trackOutbound({
+      action: course ? "course_card_click" : "skool_enroll_click",
+      destination: "skool",
+      label,
+      ...(course ? { course, track: track.name } : {}),
+    });
 
   return (
     <main className="overflow-hidden">
