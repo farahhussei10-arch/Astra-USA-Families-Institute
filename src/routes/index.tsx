@@ -188,6 +188,29 @@ function Index() {
   const techPanelRef = useRef<HTMLDivElement>(null);
   const track = tracks[activeTrack] ?? tracks[0];
   useEffect(() => initializeAnalytics(), []);
+
+  /* Fade-and-rise on scroll, once per element, skipped when reduced motion is preferred. */
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal="hidden"]'));
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.setAttribute("data-reveal", "shown"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.setAttribute("data-reveal", "shown");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [activeTrack]);
+
   if (!track) return null;
 
   const handleTechMove = (event: MouseEvent<HTMLDivElement>) => {
