@@ -250,11 +250,11 @@ function Index() {
         <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
           <div className="max-w-3xl reveal-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />Knowledge without borders</div>
-            <h1 className="text-balance font-display text-4xl font-extrabold leading-[1.06] sm:text-6xl lg:text-7xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
-            <p className="mt-6 max-w-2xl text-balance text-base leading-7 text-primary-foreground/85 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
+            <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
+            <p className="mt-6 max-w-xl text-balance text-base leading-7 text-primary-foreground/90 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild variant="gold" size="lg"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
-              <Button asChild size="lg" className="border border-primary-foreground/35 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+              <Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+              <Button asChild size="lg" className="border border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
             </div>
           </div>
         </div>
