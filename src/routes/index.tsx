@@ -270,7 +270,7 @@ function Index() {
       </section>
 
       <section className="bg-surface-strong py-20 sm:py-28">
-        <div className="section-shell">
+        <div data-reveal="hidden" className="section-shell">
           <div className="max-w-2xl"><span className="section-kicker"><Star className="size-4" />Why Iftiin</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl">Built around how our community actually learns.</h2></div>
           <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-surface p-6 transition-colors hover:bg-gold-soft"><span className="mb-8 grid size-11 place-items-center rounded-md bg-primary text-primary-foreground"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold-foreground">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
         </div>
