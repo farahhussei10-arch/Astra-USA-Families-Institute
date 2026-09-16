@@ -160,6 +160,24 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/* Badges never rely on colour alone: each carries its own label and icon. */
+const badgeStyles: Record<string, string> = {
+  Flagship: "bg-gold text-gold-foreground",
+  "Top Pick": "bg-primary text-primary-foreground",
+  Popular: "bg-surface text-primary ring-1 ring-border-strong",
+  New: "bg-surface text-gold-foreground ring-1 ring-border-strong",
+};
+
+function CourseBadge({ label }: { label: string }) {
+  const Icon = label === "Flagship" || label === "Top Pick" ? Star : Sparkles;
+  return (
+    <span className={`absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${badgeStyles[label] ?? badgeStyles["Popular"]}`}>
+      <Icon className="size-3" aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
 function Logo({ inverted = false }: { inverted?: boolean }) {
   return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span><span className={`font-display text-lg font-extrabold ${inverted ? "text-primary-foreground" : "text-primary"}`}>Iftiin<span className="text-gold">.</span></span></a>;
 }
@@ -170,6 +188,29 @@ function Index() {
   const techPanelRef = useRef<HTMLDivElement>(null);
   const track = tracks[activeTrack] ?? tracks[0];
   useEffect(() => initializeAnalytics(), []);
+
+  /* Fade-and-rise on scroll, once per element, skipped when reduced motion is preferred. */
+  useEffect(() => {
+    const nodes = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal="hidden"]'));
+    if (!nodes.length) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      nodes.forEach((node) => node.setAttribute("data-reveal", "shown"));
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          entry.target.setAttribute("data-reveal", "shown");
+          observer.unobserve(entry.target);
+        });
+      },
+      { rootMargin: "0px 0px -10% 0px", threshold: 0.05 },
+    );
+    nodes.forEach((node) => observer.observe(node));
+    return () => observer.disconnect();
+  }, [activeTrack]);
+
   if (!track) return null;
 
   const handleTechMove = (event: MouseEvent<HTMLDivElement>) => {
@@ -181,7 +222,13 @@ function Index() {
   };
 
   const trackWhatsApp = (label: string) => trackOutbound({ action: "whatsapp_enroll_click", destination: "whatsapp", label });
-  const trackSkool = (label: string, course?: string) => trackOutbound({ action: course ? "course_card_click" : "skool_enroll_click", destination: "skool", label, course, track: course ? track.name : undefined });
+  const trackSkool = (label: string, course?: string) =>
+    trackOutbound({
+      action: course ? "course_card_click" : "skool_enroll_click",
+      destination: "skool",
+      label,
+      ...(course ? { course, track: track.name } : {}),
+    });
 
   return (
     <main className="overflow-hidden">
@@ -191,23 +238,23 @@ function Index() {
           <nav aria-label="Main navigation" className="hidden items-center gap-7 lg:flex">
             {[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Stories", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} className="text-sm font-semibold text-muted-foreground transition-colors hover:text-primary">{label}</a>)}
           </nav>
-          <div className="hidden lg:block"><Button asChild variant="gold"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Header enroll now")}><MessageCircle className="size-4" />Enroll now</a></Button></div>
+          <div className="hidden lg:block"><Button asChild variant="whatsapp"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Header enroll now")}><MessageCircle className="size-4" />Enroll on WhatsApp</a></Button></div>
           <Button aria-label={menuOpen ? "Close menu" : "Open menu"} variant="ghost" size="icon" className="lg:hidden" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</Button>
         </div>
         {menuOpen && <nav aria-label="Mobile navigation" className="border-t border-border bg-background px-4 py-4 lg:hidden">{[["Home", "#home"], ["Courses", "#courses"], ["How it works", "#how-it-works"], ["Testimonials", "#testimonials"], ["Contact", "#contact"]].map(([label, href]) => <a key={href} href={href} onClick={() => setMenuOpen(false)} className="block border-b border-border py-3 font-bold text-foreground last:border-0">{label}</a>)}</nav>}
       </header>
 
       <section id="home" className="relative min-h-[92svh] scroll-mt-20 bg-primary pt-17 text-primary-foreground">
-        <img src={heroImage} width={1536} height={1024} fetchPriority="high" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
+        <img src={heroImage} width={1280} height={853} fetchPriority="high" decoding="async" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--primary)_0%,color-mix(in_oklab,var(--primary)_94%,transparent)_38%,color-mix(in_oklab,var(--primary)_35%,transparent)_72%,color-mix(in_oklab,var(--primary)_15%,transparent)_100%)]" />
         <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
           <div className="max-w-3xl reveal-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />Knowledge without borders</div>
-            <h1 className="text-balance font-display text-4xl font-extrabold leading-[1.06] sm:text-6xl lg:text-7xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
-            <p className="mt-6 max-w-2xl text-balance text-base leading-7 text-primary-foreground/85 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
+            <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
+            <p className="mt-6 max-w-xl text-balance text-base leading-7 text-primary-foreground/90 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild variant="gold" size="lg"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
-              <Button asChild size="lg" className="border border-primary-foreground/35 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+              <Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
+              <Button asChild size="lg" className="border border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
             </div>
           </div>
         </div>
@@ -216,14 +263,14 @@ function Index() {
       <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
 
       <section className="py-20 sm:py-28">
-        <div className="section-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+        <div data-reveal="hidden" className="section-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
           <div><span className="section-kicker"><Globe2 className="size-4" />One academy, worldwide</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Your classroom travels with you.</h2><p className="mt-5 max-w-xl leading-7 text-muted-foreground">Join online from London, Minneapolis, Mogadishu, Nairobi, or wherever opportunity takes you. Learn on a laptop, tablet, or phone without leaving your community behind.</p><div className="mt-7 flex flex-wrap gap-2 text-xs font-extrabold text-primary"><span className="rounded-sm bg-surface-strong px-3 py-2">UK learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">USA learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Somalia learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Worldwide diaspora</span></div></div>
-          <div ref={techPanelRef} onMouseMove={handleTechMove} className="tech-panel group relative overflow-hidden rounded-lg border border-border bg-primary shadow-card"><img src={globalLearnersImage} width={1536} height={1024} loading="lazy" alt="Somali online learners using a laptop, tablet, and phone in the UK, USA, and Somalia" className="aspect-[3/2] size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" /><div className="tech-grid" aria-hidden="true" /><div className="tech-cursor" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-md border border-primary-foreground/20 bg-primary/85 px-4 py-3 text-primary-foreground backdrop-blur"><span className="text-xs font-extrabold uppercase tracking-[0.14em]">Live online · Learn anywhere</span><span className="size-2 rounded-full bg-gold shadow-[0_0_18px_var(--gold)]" /></div></div>
+          <div ref={techPanelRef} onMouseMove={handleTechMove} className="tech-panel group relative overflow-hidden rounded-lg border border-border bg-primary shadow-card"><img src={globalLearnersImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali online learners using a laptop, tablet, and phone in the UK, USA, and Somalia" className="aspect-[3/2] size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" /><div className="tech-grid" aria-hidden="true" /><div className="tech-cursor" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-md border border-primary-foreground/20 bg-primary/85 px-4 py-3 text-primary-foreground backdrop-blur"><span className="text-xs font-extrabold uppercase tracking-[0.14em]">Live online · Learn anywhere</span><span className="size-2 rounded-full bg-gold shadow-[0_0_18px_var(--gold)]" /></div></div>
         </div>
       </section>
 
       <section className="bg-surface-strong py-20 sm:py-28">
-        <div className="section-shell">
+        <div data-reveal="hidden" className="section-shell">
           <div className="max-w-2xl"><span className="section-kicker"><Star className="size-4" />Why Iftiin</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl">Built around how our community actually learns.</h2></div>
           <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-surface p-6 transition-colors hover:bg-gold-soft"><span className="mb-8 grid size-11 place-items-center rounded-md bg-primary text-primary-foreground"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold-foreground">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
         </div>
@@ -234,7 +281,7 @@ function Index() {
           <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end"><div className="max-w-3xl"><span className="section-kicker"><BookOpen className="size-4" />Course catalog</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Skills for the life you’re building.</h2><p className="mt-4 max-w-2xl leading-7 text-muted-foreground">Start with what matters now. Every course is practical, welcoming, and built to move you forward.</p></div><div className="flex items-center gap-2 text-sm font-bold text-primary"><Play className="size-4 fill-current" />Live + downloadable lessons</div></div>
           <div className="mt-10 flex gap-2 overflow-x-auto pb-3" role="tablist" aria-label="Course tracks">{tracks.map((item, index) => <button key={item.name} type="button" role="tab" aria-selected={index === activeTrack} onClick={() => setActiveTrack(index)} className={`shrink-0 rounded-md border px-4 py-2.5 text-sm font-bold transition-colors ${index === activeTrack ? "border-primary bg-primary text-primary-foreground" : "border-border bg-surface text-muted-foreground hover:border-primary hover:text-primary"}`}>{item.short}{item.flagship && <span className="ml-2 text-gold">★</span>}</button>)}</div>
           <div className="mt-7 flex flex-col gap-2 border-l-4 border-gold pl-4"><p className="text-xs font-extrabold uppercase tracking-[0.14em] text-primary">{track.flagship ? "Flagship track" : `Track ${activeTrack + 1}`}</p><h3 className="text-2xl font-extrabold sm:text-3xl">{track.name}</h3><p className="text-sm text-muted-foreground">{track.intro}</p></div>
-          <div className={`mt-8 grid gap-5 ${track.courses.length === 1 ? "max-w-md" : "sm:grid-cols-2 lg:grid-cols-3"}`}>{track.courses.map((course) => <article key={course.title} className="group overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong"><div className="relative aspect-[4/3] overflow-hidden"><img src={course.image} width={1024} height={768} loading="lazy" alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /><span className="absolute left-4 top-4 rounded-sm bg-gold px-2.5 py-1 text-[11px] font-extrabold uppercase text-gold-foreground">{course.badge}</span></div><div className="p-5"><h3 className="text-lg font-extrabold leading-snug">{course.title}</h3><p className="mt-2 min-h-18 text-sm leading-6 text-muted-foreground">{course.description}</p><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Explore course", course.title)} className="mt-5 inline-flex items-center gap-1 text-sm font-extrabold text-primary">Explore course <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" /></a></div></article>)}</div>
+          <div className={`mt-8 grid gap-5 ${track.courses.length === 1 ? "max-w-md" : "sm:grid-cols-2 lg:grid-cols-3"}`}>{track.courses.map((course) => <article data-reveal="hidden" key={course.title} className="group overflow-hidden rounded-lg border border-border bg-card shadow-card transition-all duration-300 hover:-translate-y-1 hover:border-border-strong"><div className="relative aspect-[4/3] overflow-hidden"><img src={course.image} width={800} height={600} loading="lazy" decoding="async" alt="" className="size-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" /><CourseBadge label={course.badge} /></div><div className="p-5"><h3 className="text-lg font-extrabold leading-snug">{course.title}</h3><p className="mt-2 min-h-18 text-sm leading-6 text-muted-foreground">{course.description}</p><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Explore course", course.title)} className="mt-5 inline-flex items-center gap-1 text-sm font-extrabold text-primary">Explore course <ChevronRight className="size-4 transition-transform group-hover:translate-x-1" /></a></div></article>)}</div>
         </div>
       </section>
 
