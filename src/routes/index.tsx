@@ -160,6 +160,24 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
+/* Badges never rely on colour alone: each carries its own label and icon. */
+const badgeStyles: Record<string, string> = {
+  Flagship: "bg-gold text-gold-foreground",
+  "Top Pick": "bg-primary text-primary-foreground",
+  Popular: "bg-surface text-primary ring-1 ring-border-strong",
+  New: "bg-surface text-gold-foreground ring-1 ring-border-strong",
+};
+
+function CourseBadge({ label }: { label: string }) {
+  const Icon = label === "Flagship" || label === "Top Pick" ? Star : Sparkles;
+  return (
+    <span className={`absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide ${badgeStyles[label] ?? badgeStyles["Popular"]}`}>
+      <Icon className="size-3" aria-hidden="true" />
+      {label}
+    </span>
+  );
+}
+
 function Logo({ inverted = false }: { inverted?: boolean }) {
   return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span><span className={`font-display text-lg font-extrabold ${inverted ? "text-primary-foreground" : "text-primary"}`}>Iftiin<span className="text-gold">.</span></span></a>;
 }
