@@ -245,7 +245,7 @@ function Index() {
       </header>
 
       <section id="home" className="relative min-h-[92svh] scroll-mt-20 bg-primary pt-17 text-primary-foreground">
-        <img src={heroImage} width={1536} height={1024} fetchPriority="high" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
+        <img src={heroImage} width={1280} height={853} fetchPriority="high" decoding="async" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
         <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--primary)_0%,color-mix(in_oklab,var(--primary)_94%,transparent)_38%,color-mix(in_oklab,var(--primary)_35%,transparent)_72%,color-mix(in_oklab,var(--primary)_15%,transparent)_100%)]" />
         <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
           <div className="max-w-3xl reveal-up">
