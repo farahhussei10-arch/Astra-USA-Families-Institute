@@ -38,7 +38,8 @@ import globalLearnersImage from "@/assets/global-online-learners.jpg";
 import studyCommunityImage from "@/assets/online-study-community.jpg";
 import { initializeAnalytics, trackOutbound } from "@/lib/analytics";
 
-const WHATSAPP_URL = "https://wa.me/000000000000";
+const WHATSAPP_URL = "https://wa.me/254714348375";
+const CONTACT_EMAIL = "hussein.farah@students.jkuat.ac.ke";
 const SKOOL_URL = "https://www.skool.com/your-community";
 
 type Course = { title: string; description: string; badge: string; image: string };
