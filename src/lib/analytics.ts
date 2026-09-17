@@ -1,6 +1,6 @@
 type AnalyticsEvent = {
   action: string;
-  destination: "whatsapp" | "skool";
+  destination: "whatsapp" | "skool" | "email";
   label: string;
   course?: string;
   track?: string;
