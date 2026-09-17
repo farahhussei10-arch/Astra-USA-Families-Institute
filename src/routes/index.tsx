@@ -286,19 +286,19 @@ function Index() {
       </section>
 
       <section id="how-it-works" className="pattern-grid scroll-mt-16 py-20 sm:py-28">
-        <div className="section-shell"><div className="mx-auto max-w-2xl text-center"><span className="section-kicker"><GraduationCap className="size-4" />How it works</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Three simple steps. One brighter next chapter.</h2></div>
+        <div data-reveal="hidden" className="section-shell"><div className="mx-auto max-w-2xl text-center"><span className="section-kicker"><GraduationCap className="size-4" />How it works</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Three simple steps. One brighter next chapter.</h2></div>
           <div className="relative mt-14 grid gap-5 lg:grid-cols-3">{[
             { number: "1", title: "Pick your course", text: "Choose the skill, test, or subject that moves your goals forward.", icon: BookOpen },
             { number: "2", title: "Pay your way", text: "Use card or PayPal in the US, or EVC Plus, Zaad, and M-Pesa in Somalia and Kenya.", icon: WalletCards },
             { number: "3", title: "Start learning", text: "Get enrolled, meet your instructor, and begin with live or downloadable lessons.", icon: Play },
           ].map(({ number, title, text, icon: StepIcon }) => <article key={number} className="relative rounded-lg border border-border bg-surface p-7 shadow-card"><span className="absolute right-6 top-4 font-display text-6xl font-extrabold text-muted">{number}</span><span className="grid size-12 place-items-center rounded-md bg-primary text-gold"><StepIcon className="size-5" /></span><h3 className="mt-8 text-xl font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
-           <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/75">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Send payment receipt")}><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
+           <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/90">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Send payment receipt")}><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
         </div>
       </section>
 
       <section id="faq" className="bg-surface-strong py-20 sm:py-28">
-        <div className="section-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <div><span className="section-kicker">Enrollment FAQ</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Clear answers before you begin.</h2><p className="mt-5 max-w-lg leading-7 text-muted-foreground">Not sure where to start? Message our team and we’ll help you choose without pressure.</p><img src={studyCommunityImage} width={1536} height={1024} loading="lazy" alt="Somali students joining an online study community from home" className="mt-8 aspect-[3/2] w-full rounded-lg object-cover shadow-card" /></div>
+        <div data-reveal="hidden" className="section-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div><span className="section-kicker">Enrollment FAQ</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Clear answers before you begin.</h2><p className="mt-5 max-w-lg leading-7 text-muted-foreground">Not sure where to start? Message our team and we’ll help you choose without pressure.</p><img src={studyCommunityImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali students joining an online study community from home" className="mt-8 aspect-[3/2] w-full rounded-lg object-cover shadow-card" /></div>
           <div className="divide-y divide-border border-y border-border">{[
             ["How does enrollment work?", "Choose a course, select the payment option that works in your country, and complete payment. We’ll confirm your place and send the details you need to begin live or downloadable lessons."],
             ["How does pay-your-way confirmation on WhatsApp work?", "If you pay with EVC Plus, Zaad, or M-Pesa, open WhatsApp after payment and send a clear receipt or transaction screenshot with your name and chosen course. Our team will verify it and enroll you within hours."],
@@ -308,7 +308,7 @@ function Index() {
       </section>
 
       <section className="py-20 sm:py-24">
-        <div className="section-shell grid overflow-hidden rounded-lg bg-primary text-primary-foreground lg:grid-cols-[1fr_auto]">
+        <div data-reveal="hidden" className="section-shell grid overflow-hidden rounded-lg bg-primary text-primary-foreground lg:grid-cols-[1fr_auto]">
           <div className="p-7 sm:p-10"><span className="section-kicker !text-gold">Scan to enroll</span><h2 className="mt-4 max-w-xl text-balance text-3xl font-extrabold sm:text-5xl">Open WhatsApp. Start your next chapter.</h2><p className="mt-4 max-w-xl leading-7 text-primary-foreground/75">Scan with your phone camera to ask about a course, confirm payment, or get help choosing the right track.</p><Button asChild variant="whatsapp" size="lg" className="mt-7"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("QR section enroll")}><MessageCircle className="size-5" />Open WhatsApp</a></Button></div>
           <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("WhatsApp QR code")} aria-label="Open WhatsApp enrollment" className="m-7 grid place-items-center rounded-lg bg-surface p-5 sm:m-10"><QRCodeSVG value={WHATSAPP_URL} size={210} level="H" bgColor="transparent" fgColor="var(--primary)" title="WhatsApp enrollment QR code" /><span className="mt-3 text-xs font-extrabold text-primary">SCAN TO ENROLL</span></a>
         </div>
