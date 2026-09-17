@@ -1,9 +1,15 @@
 # Roadmap
 
-- [ ] Add FAQ covering enrollment, WhatsApp payment confirmation, and track selection
-- [ ] Add a WhatsApp enrollment QR code block
-- [ ] Complete route SEO and OpenGraph metadata
-- [ ] Track course clicks and outbound WhatsApp/Skool conversions
-- [ ] Add global online-learner imagery emphasizing the UK, USA, Somalia, and worldwide diaspora
-- [ ] Add subtle cursor-responsive high-tech visual effects
-- [ ] Verify desktop and mobile behavior
+- [x] FAQ covering enrollment, WhatsApp payment confirmation, and track selection
+- [x] WhatsApp enrollment QR code block
+- [x] Route SEO, OpenGraph metadata, and share image
+- [x] Track course clicks and outbound WhatsApp/Skool conversions (live once analytics is connected)
+- [x] Global online-learner imagery (UK, USA, Somalia, worldwide)
+- [x] Cursor-responsive visual effect
+- [x] Scroll reveal on every section, contrast lift on dark panels
+- [x] Verified desktop and mobile
+
+Waiting on you:
+- [ ] Real WhatsApp number and Skool community link
+- [ ] Real instructor names and photos for the team section
+- [ ] Real learner testimonials
