@@ -3,6 +3,7 @@ import {
   ArrowRight,
   BookOpen,
   BriefcaseBusiness,
+  ChevronLeft,
   ChevronRight,
   Clock3,
   Facebook,
@@ -46,6 +47,14 @@ const SKOOL_URL = "https://www.skool.com/your-community";
 
 type Course = { title: string; description: string; badge: string; image: string };
 type Track = { name: string; short: string; intro: string; courses: Course[]; flagship?: boolean };
+type HeroSlide = { image: string; badge: string; title: string; subtitle: string; action: string; href: string };
+
+const heroSlides: HeroSlide[] = [
+  { image: heroImage, badge: "Featured Course", title: "Learn from anywhere. Grow with purpose.", subtitle: "Language, careers, faith, and life skills taught by people who understand your journey.", action: "Explore courses", href: "#courses" },
+  { image: globalLearnersImage, badge: "Live Class", title: "A classroom that travels with you.", subtitle: "Join interactive lessons from London, Minneapolis, Mogadishu, Nairobi, or wherever opportunity takes you.", action: "See how it works", href: "#how-it-works" },
+  { image: technologyImage, badge: "Digital Skills", title: "Build confidence on your laptop.", subtitle: "Master Microsoft Office, AI tools, coding, and practical technology for school, work, and business.", action: "View technology courses", href: "#courses" },
+  { image: studyCommunityImage, badge: "Study Community", title: "Learn together, wherever you are.", subtitle: "Get mentor support, downloadable lessons, and a welcoming community built around Somali learners.", action: "Join the community", href: WHATSAPP_URL },
+];
 
 const tracks: Track[] = [
   {
@@ -193,6 +202,65 @@ function Logo({ inverted = false }: { inverted?: boolean }) {
   );
 }
 
+function HeroSlider() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+  const slide = heroSlides[activeSlide] ?? heroSlides[0];
+
+  useEffect(() => {
+    if (isPaused || heroSlides.length < 2) return;
+    const timer = window.setInterval(() => {
+      setActiveSlide((current) => (current + 1) % heroSlides.length);
+    }, 4000);
+    return () => window.clearInterval(timer);
+  }, [isPaused]);
+
+  const moveSlide = (direction: number) => {
+    setActiveSlide((current) => (current + direction + heroSlides.length) % heroSlides.length);
+  };
+
+  return (
+    <div
+      className="absolute inset-0"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+      onFocus={() => setIsPaused(true)}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPaused(false);
+      }}
+      aria-roledescription="carousel"
+      aria-label="Featured Astra courses"
+    >
+      {heroSlides.map((item, index) => (
+        <div key={item.title} className={`absolute inset-0 transition-opacity duration-700 ${index === activeSlide ? "z-10 opacity-100" : "pointer-events-none opacity-0"}`} aria-hidden={index !== activeSlide}>
+          <img src={item.image} width={1280} height={853} fetchPriority={index === 0 ? "high" : "auto"} loading={index === 0 ? "eager" : "lazy"} decoding="async" alt="" className="modern-edu-photo size-full object-cover object-center" />
+        </div>
+      ))}
+      <div className="absolute inset-0 z-20 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--primary)_82%,transparent)_0%,color-mix(in_oklab,var(--primary)_54%,transparent)_42%,color-mix(in_oklab,var(--primary)_14%,transparent)_72%,transparent_100%)]" />
+      <div className="section-shell relative z-30 flex min-h-full items-end pb-12 pt-20 sm:items-center sm:pb-16">
+        <div className="max-w-3xl reveal-up" key={slide.title}>
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />{slide.badge}</div>
+          <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">{slide.title}</h1>
+          <p className="mt-6 max-w-xl text-balance text-base leading-7 text-primary-foreground/90 sm:text-lg">{slide.subtitle}</p>
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <Button asChild variant="whatsapp" size="lg"><a href={slide.href} target={slide.href.startsWith("http") ? "_blank" : undefined} rel={slide.href.startsWith("http") ? "noreferrer" : undefined}>{slide.action} <ArrowRight className="size-4" /></a></Button>
+            <Button asChild size="lg" className="border border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
+          </div>
+        </div>
+      </div>
+      <div className="absolute inset-x-0 bottom-7 z-40 flex items-center justify-between px-4 sm:px-8">
+        <div className="flex items-center gap-2" role="group" aria-label="Choose featured slide">
+          {heroSlides.map((item, index) => <button key={item.title} type="button" aria-label={`Show slide ${index + 1}: ${item.title}`} aria-current={index === activeSlide} onClick={() => setActiveSlide(index)} className={`h-2 rounded-full transition-all ${index === activeSlide ? "w-8 bg-gold" : "w-2 bg-primary-foreground/60 hover:bg-primary-foreground"}`} />)}
+        </div>
+        <div className="flex gap-2">
+          <button type="button" aria-label="Previous slide" onClick={() => moveSlide(-1)} className="grid size-10 place-items-center rounded-full border border-primary-foreground/30 bg-primary/60 text-primary-foreground backdrop-blur transition-colors hover:bg-gold hover:text-slate-950"><ChevronLeft className="size-5" /></button>
+          <button type="button" aria-label="Next slide" onClick={() => moveSlide(1)} className="grid size-10 place-items-center rounded-full border border-primary-foreground/30 bg-primary/60 text-primary-foreground backdrop-blur transition-colors hover:bg-gold hover:text-slate-950"><ChevronRight className="size-5" /></button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function Index() {
   const [activeTrack, setActiveTrack] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -256,21 +324,7 @@ function Index() {
       </header>
 
       <section id="home" className="relative min-h-[92svh] scroll-mt-20 bg-primary pt-17 text-primary-foreground">
-        <div className="modern-edu-frame absolute inset-0">
-          <img src={heroImage} width={1280} height={853} fetchPriority="high" decoding="async" alt="Somali family members learning together at home with a laptop" className="modern-edu-photo size-full object-cover object-[68%_center]" />
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--primary)_72%,transparent)_0%,color-mix(in_oklab,var(--primary)_48%,transparent)_34%,color-mix(in_oklab,var(--primary)_14%,transparent)_68%,transparent_100%)]" />
-        <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
-          <div className="max-w-3xl reveal-up">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />Knowledge without borders</div>
-            <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">Astra UsA Families Institute — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
-            <p className="mt-6 max-w-xl text-balance text-base leading-7 text-primary-foreground/90 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
-              <Button asChild size="lg" className="border border-primary-foreground/40 bg-primary-foreground/10 hover:bg-primary-foreground/20"><a href="#courses">Browse courses <ArrowRight className="size-4" /></a></Button>
-            </div>
-          </div>
-        </div>
+        <HeroSlider />
       </section>
 
       <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
