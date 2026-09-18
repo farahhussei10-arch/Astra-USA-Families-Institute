@@ -77,10 +77,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Iftiin Academy" },
+      { title: "Astra UsA Families Institute" },
       { name: "description", content: "Practical online learning for the Somali diaspora." },
-      { name: "author", content: "Iftiin Academy" },
-      { property: "og:title", content: "Iftiin Academy" },
+      { name: "author", content: "Astra UsA Families Institute" },
+      { property: "og:title", content: "Astra UsA Families Institute" },
       { property: "og:description", content: "Practical online learning for the Somali diaspora." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },

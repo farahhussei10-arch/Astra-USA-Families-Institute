@@ -13,6 +13,7 @@ import {
   Mail,
   Menu,
   MessageCircle,
+  PhoneCall,
   Play,
   Quote,
   Smartphone,
@@ -27,7 +28,6 @@ import { QRCodeSVG } from "qrcode.react";
 import { Button } from "@/components/ui/button";
 import heroImage from "@/assets/iftiin-hero.jpg";
 import technologyImage from "@/assets/track-technology.jpg";
-import languageImage from "@/assets/track-language.jpg";
 import truckingImage from "@/assets/track-trucking.jpg";
 import careerImage from "@/assets/track-career.jpg";
 import lifeImage from "@/assets/track-life.jpg";
@@ -40,6 +40,7 @@ import studyCommunityImage from "@/assets/online-study-community.jpg";
 import { initializeAnalytics, trackOutbound } from "@/lib/analytics";
 
 const WHATSAPP_URL = "https://wa.me/254714348375";
+const PHONE_URL = "tel:+254714348375";
 const CONTACT_EMAIL = "hussein.farah@students.jkuat.ac.ke";
 const SKOOL_URL = "https://www.skool.com/your-community";
 
@@ -53,9 +54,9 @@ const tracks: Track[] = [
     flagship: true,
     intro: "Keep language, faith, and belonging strong across generations.",
     courses: [
-      { title: "Somali Language for Diaspora Kids", description: "Help your child speak with grandparents, understand their roots, and feel proud of who they are.", badge: "Flagship", image: languageImage },
+      { title: "Somali Language for Diaspora Kids", description: "Help your child speak with grandparents, understand their roots, and feel proud of who they are.", badge: "Flagship", image: heroImage },
       { title: "English Language", description: "Build confident conversational and academic English for school, work, and everyday life.", badge: "Popular", image: careerImage },
-      { title: "Quran, Arabic & Islamic Studies", description: "A calm, supportive path to reading, understanding, and growing in faith from home.", badge: "Flagship", image: languageImage },
+      { title: "Quran, Arabic & Islamic Studies", description: "A calm, supportive path to reading, understanding, and growing in faith from home.", badge: "Flagship", image: studyCommunityImage },
     ],
   },
   {
@@ -107,7 +108,7 @@ const tracks: Track[] = [
     intro: "Patient, culturally aware support that helps young learners catch up and aim higher.",
     courses: [
       { title: "Science", description: "Make key exam topics memorable through clear explanations and practical examples.", badge: "Popular", image: lifeImage },
-      { title: "English as a School Subject", description: "Grow stronger in reading, analysis, writing, and the confidence to speak up in class.", badge: "New", image: languageImage },
+      { title: "English as a School Subject", description: "Grow stronger in reading, analysis, writing, and the confidence to speak up in class.", badge: "New", image: heroImage },
     ],
   },
   {
@@ -142,18 +143,18 @@ const benefits = [
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Iftiin Academy | Online Learning for Somalis" },
+      { title: "Astra UsA Families Institute | Online Learning for Somalis" },
       { name: "description", content: "Online language, career, faith, and life-skills courses for Somali learners in the UK, USA, Somalia, and worldwide." },
-      { property: "og:title", content: "Iftiin Academy — Learn, Grow & Get Ahead" },
+      { property: "og:title", content: "Astra UsA Families Institute — Learn, Grow & Get Ahead" },
       { property: "og:description", content: "Practical online courses created for the Somali diaspora, wherever you live." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://iftiin-light-of-knowledge.lovable.app/" },
       { property: "og:image", content: "https://iftiin-light-of-knowledge.lovable.app/og-iftiin-academy.jpg" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Somali diaspora learners studying online with Iftiin Academy" },
+      { property: "og:image:alt", content: "Somali diaspora learners studying online with Astra UsA Families Institute" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Iftiin Academy — Learn, Grow & Get Ahead" },
+      { name: "twitter:title", content: "Astra UsA Families Institute — Learn, Grow & Get Ahead" },
       { name: "twitter:description", content: "Practical online courses created for the Somali diaspora, wherever you live." },
       { name: "twitter:image", content: "https://iftiin-light-of-knowledge.lovable.app/og-iftiin-academy.jpg" },
     ],
@@ -181,7 +182,15 @@ function CourseBadge({ label }: { label: string }) {
 }
 
 function Logo({ inverted = false }: { inverted?: boolean }) {
-  return <a href="#home" className="flex items-center gap-2.5" aria-label="Iftiin Academy home"><span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span><span className={`font-display text-lg font-extrabold ${inverted ? "text-primary-foreground" : "text-primary"}`}>Iftiin<span className="text-gold">.</span></span></a>;
+  return (
+    <a href="#home" className="flex items-center gap-2.5" aria-label="Astra Somalia USA Families Institute home">
+      <span className={`grid size-9 place-items-center rounded-md text-gold ${inverted ? "bg-primary-foreground/10" : "bg-primary"}`}><Sparkles className="size-5" /></span>
+      <span className={`font-display text-left text-base font-extrabold leading-tight ${inverted ? "text-primary-foreground" : "text-primary"}`}>
+        <span className="block">Astra</span>
+        <span className="block text-[10px] font-bold tracking-[0.14em] text-gold uppercase">UsA Families Institute</span>
+      </span>
+    </a>
+  );
 }
 
 function Index() {
@@ -247,12 +256,14 @@ function Index() {
       </header>
 
       <section id="home" className="relative min-h-[92svh] scroll-mt-20 bg-primary pt-17 text-primary-foreground">
-        <img src={heroImage} width={1280} height={853} fetchPriority="high" decoding="async" alt="Somali diaspora learners studying together with laptops" className="absolute inset-0 size-full object-cover object-[68%_center]" />
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--primary)_0%,color-mix(in_oklab,var(--primary)_94%,transparent)_38%,color-mix(in_oklab,var(--primary)_35%,transparent)_72%,color-mix(in_oklab,var(--primary)_15%,transparent)_100%)]" />
+        <div className="modern-edu-frame absolute inset-0">
+          <img src={heroImage} width={1280} height={853} fetchPriority="high" decoding="async" alt="Somali family members learning together at home with a laptop" className="modern-edu-photo size-full object-cover object-[68%_center]" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,color-mix(in_oklab,var(--primary)_72%,transparent)_0%,color-mix(in_oklab,var(--primary)_48%,transparent)_34%,color-mix(in_oklab,var(--primary)_14%,transparent)_68%,transparent_100%)]" />
         <div className="section-shell relative z-10 flex min-h-[calc(92svh-4.25rem)] items-end pb-12 pt-20 sm:items-center sm:pb-16">
           <div className="max-w-3xl reveal-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary-foreground/25 bg-primary/60 px-3 py-1.5 text-xs font-bold backdrop-blur"><Sparkles className="size-4 text-gold" />Knowledge without borders</div>
-            <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">Iftiin Academy — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
+            <h1 className="text-balance font-display text-[2.6rem] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-7xl lg:text-8xl">Astra UsA Families Institute — Where the Somali Diaspora <span className="text-gold">Learns, Grows, and Gets Ahead.</span></h1>
             <p className="mt-6 max-w-xl text-balance text-base leading-7 text-primary-foreground/90 sm:text-lg">Language, careers, faith, and life skills — taught by people who understand your journey. Learn from anywhere, pay the way that works for you.</p>
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
               <Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Hero enroll")}><MessageCircle className="size-5" />Enroll / Join WhatsApp</a></Button>
@@ -264,17 +275,26 @@ function Index() {
 
       <div className="bg-gold text-gold-foreground"><div className="section-shell flex flex-col items-center justify-between gap-3 py-4 text-center text-sm font-bold sm:flex-row sm:text-left"><span className="flex items-center gap-2"><Globe2 className="size-5" />Trusted by learners across the diaspora</span><span className="text-xs sm:text-sm">United States · United Kingdom · Kenya · Somalia</span></div></div>
 
-      <section className="pattern-grid py-20 sm:py-28">
-        <div data-reveal="hidden" className="section-shell grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-          <div><span className="section-kicker"><Globe2 className="size-4" />One academy, worldwide</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Your classroom travels with you.</h2><p className="mt-5 max-w-xl leading-7 text-muted-foreground">Join online from London, Minneapolis, Mogadishu, Nairobi, or wherever opportunity takes you. Learn on a laptop, tablet, or phone without leaving your community behind.</p><div className="mt-7 flex flex-wrap gap-2 text-xs font-extrabold text-primary"><span className="rounded-sm bg-surface-strong px-3 py-2">UK learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">USA learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Somalia learners</span><span className="rounded-sm bg-surface-strong px-3 py-2">Worldwide diaspora</span></div></div>
-          <div ref={techPanelRef} onMouseMove={handleTechMove} className="tech-panel group relative overflow-hidden rounded-lg border border-border bg-primary shadow-card"><img src={globalLearnersImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali online learners using a laptop, tablet, and phone in the UK, USA, and Somalia" className="aspect-[3/2] size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" /><div className="tech-grid" aria-hidden="true" /><div className="tech-cursor" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-md border border-primary-foreground/20 bg-primary/85 px-4 py-3 text-primary-foreground backdrop-blur"><span className="text-xs font-extrabold uppercase tracking-[0.14em]">Live online · Learn anywhere</span><span className="size-2 rounded-full bg-gold shadow-[0_0_18px_var(--gold)]" /></div></div>
+      <section className="moon-education-bg pattern-grid py-20 sm:py-28 text-primary-foreground">
+        <span className="star-twinkle" style={{ top: "10%", left: "16%", animationDelay: "0.5s" }} />
+        <span className="star-twinkle" style={{ top: "18%", left: "78%", animationDelay: "1.5s" }} />
+        <div data-reveal="hidden" className="section-shell relative z-10 grid gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div><span className="section-kicker !text-gold"><Globe2 className="size-4" />One academy, worldwide</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl text-primary-foreground">Your classroom travels with you.</h2><p className="mt-5 max-w-xl leading-7 text-slate-200">Join online from London, Minneapolis, Mogadishu, Nairobi, or wherever opportunity takes you. Learn on a laptop, tablet, or phone without leaving your community behind.</p><div className="mt-7 flex flex-wrap gap-2 text-xs font-extrabold text-primary"><span className="rounded-sm border border-white/10 bg-slate-900/40 px-3 py-2 text-primary-foreground">UK learners</span><span className="rounded-sm border border-white/10 bg-slate-900/40 px-3 py-2 text-primary-foreground">USA learners</span><span className="rounded-sm border border-white/10 bg-slate-900/40 px-3 py-2 text-primary-foreground">Somalia learners</span><span className="rounded-sm border border-white/10 bg-slate-900/40 px-3 py-2 text-primary-foreground">Worldwide diaspora</span></div></div>
+          <div ref={techPanelRef} onMouseMove={handleTechMove} className="tech-panel group relative overflow-hidden rounded-lg border border-white/10 bg-primary shadow-card">
+            <div className="modern-edu-frame aspect-[3/2] size-full">
+              <img src={globalLearnersImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali online learners using a laptop, tablet, and phone in the UK, USA, and Somalia" className="modern-edu-photo size-full object-cover transition-transform duration-700 group-hover:scale-[1.02]" />
+            </div>
+            <div className="tech-grid" aria-hidden="true" /><div className="tech-cursor" aria-hidden="true" /><div className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-md border border-primary-foreground/20 bg-primary/85 px-4 py-3 text-primary-foreground backdrop-blur"><span className="text-xs font-extrabold uppercase tracking-[0.14em]">Live online · Learn anywhere</span><span className="size-2 rounded-full bg-gold shadow-[0_0_18px_var(--gold)]" /></div>
+          </div>
         </div>
       </section>
 
-      <section className="bg-surface-strong py-20 sm:py-28">
-        <div data-reveal="hidden" className="section-shell">
-          <div className="max-w-2xl"><span className="section-kicker"><Star className="size-4" />Why Iftiin</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl">Built around how our community actually learns.</h2></div>
-          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-border bg-border sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-surface p-6 transition-colors hover:bg-gold-soft"><span className="mb-8 grid size-11 place-items-center rounded-md bg-primary text-primary-foreground"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold-foreground">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
+      <section className="moon-education-bg py-20 sm:py-28 text-primary-foreground">
+        <span className="falling-star" style={{ top: "12%", left: "30%", animationDelay: "1.3s" }} />
+        <span className="star-twinkle" style={{ top: "20%", left: "74%", animationDelay: "0.9s" }} />
+        <div data-reveal="hidden" className="section-shell relative z-10">
+          <div className="max-w-2xl"><span className="section-kicker !text-gold"><Star className="size-4" />Why Astra</span><h2 className="mt-4 text-balance text-3xl font-extrabold leading-tight sm:text-5xl text-primary-foreground">Built around how our community actually learns.</h2></div>
+          <div className="mt-12 grid gap-px overflow-hidden rounded-lg border border-white/10 bg-white/10 sm:grid-cols-2 lg:grid-cols-4">{benefits.map(({ icon: Icon, title, text }, index) => <article key={title} className="group bg-slate-950/30 p-6 transition-colors hover:bg-gold-soft/10 backdrop-blur-sm"><span className="mb-8 grid size-11 place-items-center rounded-md bg-gold text-slate-950"><Icon className="size-5" /></span><span className="text-xs font-extrabold text-gold">0{index + 1}</span><h3 className="mt-2 text-lg font-extrabold text-primary-foreground">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-200">{text}</p></article>)}</div>
         </div>
       </section>
 
@@ -287,25 +307,33 @@ function Index() {
         </div>
       </section>
 
-      <section id="how-it-works" className="pattern-grid scroll-mt-16 py-20 sm:py-28">
-        <div data-reveal="hidden" className="section-shell"><div className="mx-auto max-w-2xl text-center"><span className="section-kicker"><GraduationCap className="size-4" />How it works</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Three simple steps. One brighter next chapter.</h2></div>
+      <section id="how-it-works" className="moon-education-bg pattern-grid scroll-mt-16 py-20 sm:py-28 text-primary-foreground">
+        <span className="falling-star" style={{ top: "12%", left: "18%", animationDelay: "0.8s" }} />
+        <span className="falling-star" style={{ top: "20%", left: "48%", animationDelay: "2.7s", animationDuration: "9s" }} />
+        <span className="star-twinkle" style={{ top: "14%", left: "62%", animationDelay: "0.6s" }} />
+        <span className="star-twinkle" style={{ top: "23%", left: "74%", animationDelay: "1.8s" }} />
+        <span className="star-twinkle" style={{ top: "18%", left: "82%", animationDelay: "2.2s" }} />
+        <div data-reveal="hidden" className="section-shell relative z-10"><div className="mx-auto max-w-2xl text-center"><span className="section-kicker !text-gold"><GraduationCap className="size-4" />How it works</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl text-primary-foreground">Three simple steps. One brighter next chapter.</h2></div>
           <div className="relative mt-14 grid gap-5 lg:grid-cols-3">{[
             { number: "1", title: "Pick your course", text: "Choose the skill, test, or subject that moves your goals forward.", icon: BookOpen },
             { number: "2", title: "Pay your way", text: "Use card or PayPal in the US, or EVC Plus, Zaad, and M-Pesa in Somalia and Kenya.", icon: WalletCards },
             { number: "3", title: "Start learning", text: "Get enrolled, meet your instructor, and begin with live or downloadable lessons.", icon: Play },
-          ].map(({ number, title, text, icon: StepIcon }) => <article key={number} className="relative rounded-lg border border-border bg-surface p-7 shadow-card"><span className="absolute right-6 top-4 font-display text-6xl font-extrabold text-muted">{number}</span><span className="grid size-12 place-items-center rounded-md bg-primary text-gold"><StepIcon className="size-5" /></span><h3 className="mt-8 text-xl font-extrabold">{title}</h3><p className="mt-2 text-sm leading-6 text-muted-foreground">{text}</p></article>)}</div>
-           <div className="mt-8 grid gap-5 rounded-lg bg-primary p-6 text-primary-foreground sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-primary-foreground/90">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Send payment receipt")}><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
+          ].map(({ number, title, text, icon: StepIcon }) => <article key={number} className="relative rounded-lg border border-white/10 bg-slate-950/35 p-7 shadow-card backdrop-blur-sm"><span className="absolute right-6 top-4 font-display text-6xl font-extrabold text-white/20">{number}</span><span className="grid size-12 place-items-center rounded-md bg-gold text-slate-950"><StepIcon className="size-5" /></span><h3 className="mt-8 text-xl font-extrabold text-primary-foreground">{title}</h3><p className="mt-2 text-sm leading-6 text-slate-200">{text}</p></article>)}</div>
+           <div className="mt-8 grid gap-5 rounded-lg border border-white/10 bg-slate-900/60 p-6 text-primary-foreground shadow-card backdrop-blur-sm sm:p-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><h3 className="text-xl font-extrabold">Paying from Somalia or Kenya?</h3><p className="mt-2 max-w-2xl text-sm leading-6 text-slate-200">After payment, message us your receipt on WhatsApp and we’ll enroll you within hours.</p></div><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Send payment receipt")}><MessageCircle className="size-5" />Send receipt on WhatsApp</a></Button></div>
         </div>
       </section>
 
-      <section id="faq" className="bg-surface-strong py-20 sm:py-28">
-        <div data-reveal="hidden" className="section-shell grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
-          <div><span className="section-kicker">Enrollment FAQ</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Clear answers before you begin.</h2><p className="mt-5 max-w-lg leading-7 text-muted-foreground">Not sure where to start? Message our team and we’ll help you choose without pressure.</p><img src={studyCommunityImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali students joining an online study community from home" className="mt-8 aspect-[3/2] w-full rounded-lg object-cover shadow-card" /></div>
-          <div className="divide-y divide-border border-y border-border">{[
+      <section id="faq" className="moon-education-bg py-20 sm:py-28 text-primary-foreground">
+        <span className="star-twinkle" style={{ top: "12%", left: "20%", animationDelay: "0.4s" }} />
+        <span className="star-twinkle" style={{ top: "28%", left: "68%", animationDelay: "1.2s" }} />
+        <span className="star-twinkle" style={{ top: "18%", left: "80%", animationDelay: "2.4s" }} />
+        <div data-reveal="hidden" className="section-shell relative z-10 grid gap-12 lg:grid-cols-[0.85fr_1.15fr]">
+          <div><span className="section-kicker !text-gold">Enrollment FAQ</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl text-primary-foreground">Clear answers before you begin.</h2><p className="mt-5 max-w-lg leading-7 text-slate-200">Not sure where to start? Message our team and we’ll help you choose without pressure.</p><div className="modern-edu-frame mt-8 overflow-hidden rounded-lg border border-white/10 shadow-card"><img src={studyCommunityImage} width={1280} height={853} loading="lazy" decoding="async" alt="Somali students joining an online study community from home" className="modern-edu-photo aspect-[3/2] w-full object-cover brightness-90 contrast-110 saturate-110" /><div className="edu-digital-overlay compact"><span className="edu-device-pill">Study community</span><span className="edu-device-pill muted">Online + mentor support</span></div></div></div>
+          <div className="divide-y divide-white/10 border-y border-white/10 bg-slate-950/25 backdrop-blur-sm">{[
             ["How does enrollment work?", "Choose a course, select the payment option that works in your country, and complete payment. We’ll confirm your place and send the details you need to begin live or downloadable lessons."],
             ["How does pay-your-way confirmation on WhatsApp work?", "If you pay with EVC Plus, Zaad, or M-Pesa, open WhatsApp after payment and send a clear receipt or transaction screenshot with your name and chosen course. Our team will verify it and enroll you within hours."],
             ["Which course track should I choose?", "Start with your immediate goal: Language & Culture for identity and faith, Trucking or Career Skills for work, Technology for digital confidence, School Support for young learners, or Life-Abroad Prep for tests and relocation. If two tracks fit, ask us on WhatsApp."],
-          ].map(([question, answer]) => <details key={question} className="group py-5" open={question === "How does enrollment work?"}><summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-lg font-extrabold"><span>{question}</span><span className="grid size-8 shrink-0 place-items-center rounded-full bg-primary text-primary-foreground transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pt-4 text-sm leading-7 text-muted-foreground">{answer}</p></details>)}</div>
+          ].map(([question, answer]) => <details key={question} className="group py-5 px-3" open={question === "How does enrollment work?"}><summary className="flex cursor-pointer list-none items-center justify-between gap-6 font-display text-lg font-extrabold text-primary-foreground"><span>{question}</span><span className="grid size-8 shrink-0 place-items-center rounded-full bg-gold text-slate-950 transition-transform group-open:rotate-45">+</span></summary><p className="max-w-2xl pt-4 text-sm leading-7 text-slate-200">{answer}</p></details>)}</div>
         </div>
       </section>
 
@@ -316,7 +344,7 @@ function Index() {
         </div>
       </section>
 
-      <section id="testimonials" className="scroll-mt-16 bg-primary py-20 text-primary-foreground sm:py-28">
+      <section id="testimonials" className="moon-education-bg scroll-mt-16 py-20 text-primary-foreground sm:py-28">
         <div data-reveal="hidden" className="section-shell"><div className="max-w-2xl"><span className="section-kicker !text-gold"><Quote className="size-4" />Learner stories</span><h2 className="mt-4 text-balance text-3xl font-extrabold sm:text-5xl">Progress feels better when it feels possible.</h2></div>
           {/* Placeholder testimonials — replace with verified learner testimonials before launch. */}
           <div className="mt-12 grid gap-5 md:grid-cols-3">{[
@@ -327,11 +355,11 @@ function Index() {
         </div>
       </section>
 
-      <section className="bg-surface-strong py-20 sm:py-24"><div data-reveal="hidden" className="section-shell"><div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><span className="section-kicker">Our team</span><h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">One mission. Many kinds of expertise.</h2></div><p className="max-w-xl leading-7 text-muted-foreground">A founding team focused on building trusted learning experiences for Somali families around the world.</p></div><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[["PT", "Product & Tech Lead"], ["OL", "Operations Lead"], ["CL", "Curriculum Lead"], ["ML", "Marketing Lead"]].map(([initials, role]) => <div key={role} className="flex items-center gap-4 rounded-lg border border-border bg-surface p-4"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft font-display text-sm font-extrabold text-gold-foreground">{initials}</span><span className="text-sm font-extrabold">{role}</span></div>)}</div></div></section>
+      <section className="moon-education-bg py-20 sm:py-24 text-primary-foreground"><div data-reveal="hidden" className="section-shell relative z-10"><div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-end"><div><span className="section-kicker !text-gold">Our team</span><h2 className="mt-4 text-3xl font-extrabold sm:text-4xl text-primary-foreground">One mission. Many kinds of expertise.</h2></div><p className="max-w-xl leading-7 text-slate-200">A founding team focused on building trusted learning experiences for Somali families around the world.</p></div><div className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">{[["PT", "Product & Tech Lead"], ["OL", "Operations Lead"], ["CL", "Curriculum Lead"], ["ML", "Marketing Lead"]].map(([initials, role]) => <div key={role} className="flex items-center gap-4 rounded-lg border border-white/10 bg-slate-950/30 p-4 backdrop-blur-sm"><span className="grid size-11 shrink-0 place-items-center rounded-full bg-gold-soft font-display text-sm font-extrabold text-gold-foreground">{initials}</span><span className="text-sm font-extrabold text-primary-foreground">{role}</span></div>)}</div></div></section>
 
-      <section id="contact" className="scroll-mt-16 bg-gold-soft py-16 sm:py-20"><div data-reveal="hidden" className="section-shell grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-primary">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-muted-foreground">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-col gap-3 sm:flex-row"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Contact WhatsApp")}><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Visit our school")}>Visit our school <ArrowRight className="size-4" /></a></Button><Button asChild variant="outline" size="lg"><a href={`mailto:${CONTACT_EMAIL}`} onClick={() => trackOutbound({ action: "email_contact_click", destination: "email", label: "Contact email" })}><Mail className="size-5" />Email us</a></Button><p className="mt-3 text-xs font-bold text-muted-foreground">{CONTACT_EMAIL}</p></div></div></section>
+      <section id="contact" className="moon-education-bg scroll-mt-16 py-16 sm:py-20 text-primary-foreground"><div data-reveal="hidden" className="section-shell relative z-10 grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center"><div><p className="text-sm font-extrabold text-gold">Ready when you are.</p><h2 className="mt-2 text-balance text-3xl font-extrabold sm:text-5xl text-primary-foreground">Your next step can start today.</h2><p className="mt-4 max-w-xl leading-7 text-slate-200">Tell us what you want to learn. We’ll help you choose the right course and payment path.</p></div><div className="flex flex-wrap items-center gap-3"><Button asChild variant="whatsapp" size="lg"><a href={WHATSAPP_URL} target="_blank" rel="noreferrer" onClick={() => trackWhatsApp("Contact WhatsApp")}><MessageCircle className="size-5" />Chat on WhatsApp</a></Button><Button asChild variant="outline" size="lg"><a href={SKOOL_URL} target="_blank" rel="noreferrer" onClick={() => trackSkool("Visit our school")}>Visit our school <ArrowRight className="size-4" /></a></Button><Button asChild variant="outline" size="icon"><a href={`mailto:${CONTACT_EMAIL}`} aria-label="Email us" onClick={() => trackOutbound({ action: "email_contact_click", destination: "email", label: "Contact email" })}><Mail className="size-5" /></a></Button><Button asChild variant="outline" size="icon"><a href={PHONE_URL} aria-label="Call us"><PhoneCall className="size-5" /></a></Button></div></div></section>
 
-      <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo inverted /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/85">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/90"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/80 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Iftiin Academy. All rights reserved. · <a href={`mailto:${CONTACT_EMAIL}`} className="underline underline-offset-2">{CONTACT_EMAIL}</a> · <a href={WHATSAPP_URL} target="_blank" rel="noreferrer" className="underline underline-offset-2">+254 714 348 375</a></span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
+      <footer className="bg-primary py-12 text-primary-foreground"><div className="section-shell"><div className="grid gap-10 border-b border-primary-foreground/15 pb-10 md:grid-cols-[1.4fr_1fr_1fr]"><div><Logo inverted /><p className="mt-4 max-w-sm text-sm leading-6 text-primary-foreground/85">Bringing knowledge and opportunity to the Somali diaspora, wherever they live.</p></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Explore</p><div className="mt-4 grid gap-3 text-sm text-primary-foreground/90"><a href="#courses">Courses</a><a href="#how-it-works">How it works</a><a href="#testimonials">Testimonials</a><a href={WHATSAPP_URL}>WhatsApp</a></div></div><div><p className="text-xs font-extrabold uppercase tracking-[0.15em] text-gold">Follow</p><div className="mt-4 flex gap-2"><a href="#contact" aria-label="TikTok" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Smartphone className="size-4" /></a><a href="#contact" aria-label="Facebook" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Facebook className="size-4" /></a><a href="#contact" aria-label="Instagram" className="grid size-10 place-items-center rounded-md border border-primary-foreground/20"><Instagram className="size-4" /></a></div></div></div><div className="flex flex-col gap-3 pt-6 text-xs text-primary-foreground/80 sm:flex-row sm:items-center sm:justify-between"><span>© 2026 Astra UsA Families Institute. All rights reserved.</span><span>Pricing in USD-equivalent to protect against currency changes.</span></div></div></footer>
     </main>
   );
 }
