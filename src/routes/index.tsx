@@ -41,7 +41,7 @@ import { initializeAnalytics, trackOutbound } from "@/lib/analytics";
 
 const WHATSAPP_URL = "https://wa.me/254753398741";
 const PHONE_URL = "tel:+254753398741";
-const SKOOL_URL = "https://www.skool.com/your-community";
+const SKOOL_URL = "https://www.skool.com/usa-families-institute-2010/about";
 
 type Course = { title: string; description: string; badge: string; image: string };
 type Track = { name: string; short: string; intro: string; courses: Course[]; flagship?: boolean };
