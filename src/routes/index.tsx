@@ -40,9 +40,9 @@ import globalLearnersImage from "@/assets/global-online-learners.jpg";
 import studyCommunityImage from "@/assets/online-study-community.jpg";
 import { initializeAnalytics, trackOutbound } from "@/lib/analytics";
 
-const WHATSAPP_URL = "https://wa.me/254714348375";
-const PHONE_URL = "tel:+254714348375";
-const CONTACT_EMAIL = "hussein.farah@students.jkuat.ac.ke";
+const WHATSAPP_URL = "https://wa.me/254753398741";
+const PHONE_URL = "tel:+254753398741";
+const CONTACT_EMAIL = "usafamiliesinstitute@gmail.com";
 const SKOOL_URL = "https://www.skool.com/your-community";
 
 type Course = { title: string; description: string; badge: string; image: string };
